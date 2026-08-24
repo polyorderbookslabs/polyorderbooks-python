@@ -27,10 +27,13 @@ def resolve_api_key(explicit: str | None) -> str:
 
 
 def build_headers(api_key: str) -> dict[str, str]:
+    # Imported lazily: polyorderbooks/__init__ imports client, which imports this module.
+    from polyorderbooks import __version__
+
     return {
         "Accept": "application/json",
         "X-API-Key": api_key,
-        "User-Agent": "polyorderbooks-python/0.1.0",
+        "User-Agent": f"polyorderbooks-python/{__version__}",
     }
 
 
@@ -50,6 +53,17 @@ def parse_error_message(response: httpx.Response) -> str:
     return response.reason_phrase
 
 
+def parse_retry_after(response: httpx.Response) -> float | None:
+    """Seconds to wait, from the Retry-After header the API sends on 429."""
+    raw = response.headers.get("Retry-After")
+    if not raw:
+        return None
+    try:
+        return float(raw.strip())
+    except ValueError:
+        return None
+
+
 def raise_for_status(response: httpx.Response) -> None:
     if response.is_success:
         return
@@ -67,7 +81,9 @@ def raise_for_status(response: httpx.Response) -> None:
     if status == 404:
         raise NotFoundError(status, message, **kwargs)
     if status == 429:
-        raise RateLimitError(status, message, **kwargs)
+        raise RateLimitError(
+            status, message, retry_after=parse_retry_after(response), **kwargs
+        )
     raise APIError(status, message, **kwargs)
 
 

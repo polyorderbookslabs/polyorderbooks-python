@@ -87,3 +87,48 @@ def test_iter_market_books_pagination(httpx_mock):
 
     assert len(pages) == 2
     assert httpx_mock.get_requests()[1].url.params.get("cursor") == "abc"
+
+
+def test_rate_limit_error_exposes_retry_after():
+    """The API sends Retry-After on 429; it is the only thing a caller can act on."""
+    import httpx
+    import pytest
+
+    from polyorderbooks import RateLimitError
+    from polyorderbooks._http import raise_for_status
+
+    response = httpx.Response(
+        429,
+        headers={"Retry-After": "30"},
+        json={"error": "rate_limited", "message": "Too many requests"},
+        request=httpx.Request("GET", "https://api.polyorderbooks.com/v1/markets"),
+    )
+    with pytest.raises(RateLimitError) as err:
+        raise_for_status(response)
+    assert err.value.retry_after == 30.0
+    assert err.value.status_code == 429
+
+
+def test_rate_limit_error_without_retry_after():
+    import httpx
+    import pytest
+
+    from polyorderbooks import RateLimitError
+    from polyorderbooks._http import raise_for_status
+
+    response = httpx.Response(
+        429,
+        json={"error": "rate_limited"},
+        request=httpx.Request("GET", "https://api.polyorderbooks.com/v1/markets"),
+    )
+    with pytest.raises(RateLimitError) as err:
+        raise_for_status(response)
+    assert err.value.retry_after is None
+
+
+def test_user_agent_tracks_the_package_version():
+    """It was hardcoded to 0.1.0, so every release reported the same version."""
+    import polyorderbooks
+    from polyorderbooks._http import build_headers
+
+    assert build_headers("k")["User-Agent"] == f"polyorderbooks-python/{polyorderbooks.__version__}"

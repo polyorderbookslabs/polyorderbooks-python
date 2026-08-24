@@ -26,4 +26,19 @@ class NotFoundError(APIError):
 
 
 class RateLimitError(APIError):
-    """Rate limit exceeded (429)."""
+    """Rate limit exceeded (429).
+
+    ``retry_after`` is the number of seconds the API asked you to wait, taken from
+    the Retry-After header. It is ``None`` if the header was absent or unparseable.
+    """
+
+    def __init__(
+        self,
+        status_code: int,
+        message: str,
+        *,
+        body: Any | None = None,
+        retry_after: float | None = None,
+    ) -> None:
+        super().__init__(status_code, message, body=body)
+        self.retry_after = retry_after
