@@ -31,8 +31,8 @@ dev = ["pytest>=8.0.0", "pytest-httpx>=0.35.0"]
 [project.urls]
 Homepage = "https://polyorderbooks.com"
 Documentation = "https://docs.polyorderbooks.com"
-Repository = "https://github.com/polyorderbooks/polyorderbooks-python"
-Issues = "https://github.com/polyorderbooks/polyorderbooks-python/issues"
+Repository = "https://github.com/poly-orderbooks/polyorderbooks-python"
+Issues = "https://github.com/poly-orderbooks/polyorderbooks-python/issues"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/polyorderbooks"]
