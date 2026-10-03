@@ -2,7 +2,7 @@
 
 [![PyPI version](https://badge.fury.io/py/polyorderbooks.svg)](https://pypi.org/project/polyorderbooks/)
 [![Python Versions](https://img.shields.io/pypi/pyversions/polyorderbooks)](https://pypi.org/project/polyorderbooks/)
-[![CI](https://github.com/poly-orderbooks/polyorderbooks-python/actions/workflows/ci.yml/badge.svg)](https://github.com/poly-orderbooks/polyorderbooks-python/actions/workflows/ci.yml)
+[![CI](https://github.com/polyorderbookslabs/polyorderbooks-python/actions/workflows/ci.yml/badge.svg)](https://github.com/polyorderbookslabs/polyorderbooks-python/actions/workflows/ci.yml)
 
 Official Python client for the [PolyOrderbooks API](https://docs.polyorderbooks.com) — historical Polymarket order books, prices, and liquidity metrics.
 
@@ -24,7 +24,7 @@ pip install polyorderbooks
 Or install the latest from GitHub:
 
 ```bash
-pip install git+https://github.com/poly-orderbooks/polyorderbooks-python.git
+pip install git+https://github.com/polyorderbookslabs/polyorderbooks-python.git
 ```
 
 ## Quickstart
