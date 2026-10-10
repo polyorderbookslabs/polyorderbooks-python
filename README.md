@@ -9,10 +9,10 @@ Official Python client for the [PolyOrderbooks API](https://docs.polyorderbooks.
 ## What is covered
 
 Polymarket **crypto** markets: up/down rounds (5m, 15m, 4h), price thresholds,
-and related event markets. Order books are captured at 1-second resolution and
+and related event markets. Order books are captured at 250ms resolution and
 resolved markets are stored alongside their winning outcome.
 
-Every plan queries at `1s`, including the free tier. Plans differ on history
+Every plan can query down to `250ms`, including the free tier. Plans differ on history
 window and request volume — see [pricing](https://polyorderbooks.com/pricing).
 
 ## Install
